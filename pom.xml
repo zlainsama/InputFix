@@ -17,6 +17,10 @@
 		<lwjglVersion>2.4</lwjglVersion>
 		<mcpVersion>744</mcpVersion>
 		<buildNumber>0</buildNumber>
+		<forgeVersion>7.7.1.650</forgeVersion>
+		<forgeBuildNumber>650</forgeBuildNumber>
+		<mcpURL>http://mcp.ocean-labs.de/files/mcp${mcpVersion}.zip</mcpURL>
+		<forgeURL>http://files.minecraftforge.net/minecraftforge/minecraftforge-src-${minecraftVersion}-${forgeVersion}.zip</forgeURL>
 	</properties>
 
 	<!-- Dependency repositories -->
@@ -50,9 +54,9 @@
 			<resource>
 				<filtering>false</filtering>
 				<targetPath>.</targetPath>
-				<directory>${project.basedir}</directory>
+				<directory>${project.basedir}/src/main/resources</directory>
 				<includes>
-					<include>LICENSE.txt</include>
+					<include>echars.txt</include>
 				</includes>
 			</resource>
 		</resources>
@@ -72,128 +76,23 @@
 							<failIfNotFound>false</failIfNotFound>
 							<skipIdentical>true</skipIdentical>
 							<resources>
-								<!-- Check if MCP download is needed and unpack -->
+								<!-- Download the forge src -->
 								<resource>
 									<runIf>
 										{{
-											if (!(new File(project.basedir, "runtime").isDirectory())) { return true; }
-											if (!(new File(project.basedir, "conf/version.cfg").isFile())) { return true; }
-											new File(project.basedir, "conf/version.cfg").eachLine { line -> if (!(line.contains(mcpVersion))) return true; }
+											if (!(new File(project.basedir, "forge").isDirectory())) { return true; }
+											new File(project.basedir, "forge/forgeversion.properties").eachLine { line -> if (!(line.contains("forge.build.number=" + forgeBuildNumber))) return true; }
 											return false;
 										}}
 									</runIf>
 									<targetPath>${project.basedir}</targetPath>
-									<file>http://mcp.ocean-labs.de/files/mcp${mcpVersion}.zip</file>
+									<file>${forgeURL}</file>
 									<unpack>true</unpack>
 									<useTrueZipForUnpack>false</useTrueZipForUnpack>
 									<preservePath>true</preservePath>
 									<zipEntries>
-										<zipEntry>conf/version.cfg</zipEntry>
-										<zipEntry>runtime/**</zipEntry>
+										<zipEntry>forge/**</zipEntry>
 									</zipEntries>
-								</resource>
-								<!-- Download the latest minecraft.jar if needed -->
-								<resource>
-									<runIf>
-										{{
-											file = new File(project.basedir, "jars/bin/minecraft.jar")
-											if (!file.isFile()) { return true; }
-											java.util.jar.JarFile jar = new java.util.jar.JarFile(file);
-											entry = jar.getEntry("net/minecraft/client/Minecraft.class")
-											if (entry == null) { return true; }
-											java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(jar.getInputStream(entry)));
-											while ((line = reader.readLine()) != null) { if (line.contains(minecraftVersion)) { return false; } }
-											return true;
-										}}
-									</runIf>
-									<targetPath>${project.basedir}/jars/bin</targetPath>
-									<destFileName>minecraft.jar</destFileName>
-									<file>http://assets.minecraft.net/${minecraft_Version}/minecraft.jar</file>
-								</resource>
-								<!-- Download remaining dependencies -->
-								<resource>
-									<targetPath>${project.basedir}/lib</targetPath>
-									<dependencies>
-										<dependency>
-											<groupId>net.minecraft</groupId>
-											<artifactId>lwjgl</artifactId>
-											<version>${lwjglVersion}</version>
-											<stripVersion>true</stripVersion>
-										</dependency>
-									</dependencies>
-								</resource>
-								<!-- Copy LWJGL jars to MCP bin folder -->
-								<resource>
-									<targetPath>${project.basedir}/jars/bin</targetPath>
-									<dependencies>
-										<dependency>
-											<groupId>net.minecraft</groupId>
-											<artifactId>jinput</artifactId>
-											<version>1.0.0-b01</version>
-											<stripVersion>true</stripVersion>
-										</dependency>
-										<dependency>
-											<groupId>net.minecraft</groupId>
-											<artifactId>lwjgl</artifactId>
-											<version>${lwjglVersion}</version>
-											<stripVersion>true</stripVersion>
-										</dependency>
-										<dependency>
-											<groupId>net.minecraft</groupId>
-											<artifactId>lwjgl_util</artifactId>
-											<version>${lwjglVersion}</version>
-											<stripVersion>true</stripVersion>
-										</dependency>
-									</dependencies>
-								</resource>
-								<!-- Copy and unpack LWJGL natives to MCP bin folder -->
-								<resource>
-									<runIf>{{ osName.contains("Windows") }}</runIf>
-									<targetPath>${project.basedir}/jars/bin/natives</targetPath>
-									<dependencies>
-										<dependency>
-											<groupId>net.minecraft</groupId>
-											<artifactId>lwjgl-platform</artifactId>
-											<version>${lwjglVersion}</version>
-											<classifier>natives-windows</classifier>
-											<stripVersion>true</stripVersion>
-										</dependency>
-									</dependencies>
-									<unpack>true</unpack>
-									<useTrueZipForUnpack>false</useTrueZipForUnpack>
-									<zipEntry>**/*.dll</zipEntry>
-								</resource>
-								<resource>
-									<runIf>{{ osName.contains("Mac") }}</runIf>
-									<targetPath>${project.basedir}/jars/bin/natives</targetPath>
-									<dependencies>
-										<dependency>
-											<groupId>net.minecraft</groupId>
-											<artifactId>lwjgl-platform</artifactId>
-											<version>${lwjglVersion}</version>
-											<classifier>natives-osx</classifier>
-											<stripVersion>true</stripVersion>
-										</dependency>
-									</dependencies>
-									<unpack>true</unpack>
-									<useTrueZipForUnpack>false</useTrueZipForUnpack>
-									<zipEntry>**/*.*lib</zipEntry>
-								</resource>
-								<resource>
-									<runIf>{{ osName.contains("Linux") }}</runIf>
-									<targetPath>${project.basedir}/jars/bin/natives</targetPath>
-									<dependencies>
-										<dependency>
-											<groupId>net.minecraft</groupId>
-											<artifactId>lwjgl-platform</artifactId>
-											<version>${lwjglVersion}</version>
-											<classifier>natives-linux</classifier>
-											<stripVersion>true</stripVersion>
-										</dependency>
-									</dependencies>
-									<unpack>true</unpack>
-									<useTrueZipForUnpack>false</useTrueZipForUnpack>
-									<zipEntry>**/*.so</zipEntry>
 								</resource>
 							</resources>
 						</configuration>
@@ -211,13 +110,13 @@
 								<resource>
 									<runIf>
 										{{
-											if (new File(project.basedir, "src/backup/minecraft/" + minecraftVersion).isDirectory()) { return false; }
-											if (new File(project.basedir, "src/minecraft").isDirectory()) { return true; }
+											if (new File(project.basedir, "mcp/src/backup/minecraft/" + minecraftVersion).isDirectory()) { return false; }
+											if (new File(project.basedir, "mcp/src/minecraft").isDirectory()) { return true; }
 											return false;
 										}}
 									</runIf>
-									<directory>${project.basedir}/src/minecraft</directory>
-									<targetPath>${project.basedir}/src/backup/minecraft/${minecraftVersion}</targetPath>
+									<directory>${project.basedir}/mcp/src/minecraft</directory>
+									<targetPath>${project.basedir}/mcp/src/backup/minecraft/${minecraftVersion}</targetPath>
 									<include>**/*</include>
 									<preservePath>true</preservePath>
 								</resource>
@@ -237,12 +136,12 @@
 								<resource>
 									<runIf>
 										{{
-											if (!(new File(project.basedir, "src/backup/minecraft/" + minecraftVersion).isDirectory())) { return false; }
+											if (!(new File(project.basedir, "mcp/src/backup/minecraft/" + minecraftVersion).isDirectory())) { return false; }
 											return true;
 										}}
 									</runIf>
-									<directory>${project.basedir}/src/backup/minecraft/${minecraftVersion}</directory>
-									<targetPath>${project.basedir}/src/minecraft</targetPath>
+									<directory>${project.basedir}/mcp/src/backup/minecraft/${minecraftVersion}</directory>
+									<targetPath>${project.basedir}/mcp/src/minecraft</targetPath>
 									<include>**/*</include>
 									<preservePath>true</preservePath>
 								</resource>
@@ -267,7 +166,7 @@
 										}}
 									</runIf>
 									<directory>${project.basedir}/src/main/java</directory>
-									<targetPath>${project.basedir}/src/minecraft</targetPath>
+									<targetPath>${project.basedir}/mcp/src/minecraft</targetPath>
 									<include>**/*</include>
 									<preservePath>true</preservePath>
 								</resource>
@@ -286,7 +185,7 @@
 							<failIfNotFound>false</failIfNotFound>
 							<resources>
 								<resource>
-									<directory>${project.basedir}</directory>
+									<directory>${project.basedir}/mcp/</directory>
 									<includes>
 										<include>logs/**</include>
 										<include>reobf/**</include>
@@ -333,6 +232,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<!-- Maven jar plugin -->
 			<plugin> 
 		    <groupId>org.apache.maven.plugins</groupId>
 		    <artifactId>maven-jar-plugin</artifactId>
@@ -371,11 +271,28 @@
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>1.2.1</version>
 						<executions>
-							<!-- Decompile Minecraft using MCP -->
+							<!-- Install Forge -->
+							<execution>
+								<id>setup-forge</id>
+								<configuration>
+									<skip>${forge.skip}</skip>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<arguments>
+										<argument>forge/install.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<!-- Decompile Minecraft using MCP
 							<execution>
 								<id>setup-mc</id>
 								<configuration>
-									<executable>${project.basedir}/runtime/bin/python/python_mcp</executable>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/decompile.py</argument>
 										<argument>%*</argument>
@@ -385,12 +302,13 @@
 								<goals>
 									<goal>exec</goal>
 								</goals>
-							</execution>
+							</execution> -->
 							<!-- Compile Minecraft using MCP -->
 							<execution>
 								<id>recompile-mc</id>
 								<configuration>
-									<executable>${project.basedir}/runtime/bin/python/python_mcp</executable>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/recompile.py</argument>
 										<argument>%*</argument>
@@ -422,11 +340,28 @@
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>1.2.1</version>
 						<executions>
-							<!-- Decompile Minecraft using MCP -->
+							<!-- Install Forge -->
+							<execution>
+								<id>setup-forge</id>
+								<configuration>
+									<skip>${forge.skip}</skip>
+									<executable>python</executable>
+									<arguments>
+										<argument>forge/install.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<!-- Decompile Minecraft using MCP
 							<execution>
 								<id>setup-mc</id>
 								<configuration>
 									<executable>python</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/decompile.py</argument>
 										<argument>"$@"</argument>
@@ -436,12 +371,13 @@
 								<goals>
 									<goal>exec</goal>
 								</goals>
-							</execution>
+							</execution> -->
 							<!-- Compile Minecraft using MCP -->
 							<execution>
 								<id>recompile-mc</id>
 								<configuration>
 									<executable>python</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/recompile.py</argument>
 										<argument>"$@"</argument>
@@ -472,7 +408,8 @@
 							<execution>
 								<id>reobfuscate-mc</id>
 								<configuration>
-									<executable>${project.basedir}/runtime/bin/python/python_mcp</executable>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/reobfuscate.py</argument>
 										<argument>"$@"</argument>
@@ -504,7 +441,7 @@
 													return false;
 												}}
 											</runIf>
-											<directory>${project.basedir}/reobf/minecraft</directory>
+											<directory>${project.basedir}/mcp/reobf/minecraft</directory>
 											<targetPath>${project.basedir}/target/classes</targetPath>
 											<include>**/*</include>
 											<preservePath>true</preservePath>
@@ -512,28 +449,6 @@
 									</resources>
 								</configuration>
 								<phase>prepare-package</phase>
-								<goals>
-									<goal>copy</goal>
-								</goals>
-							</execution>
-							<!-- Copy compiled jar to user folder -->
-							<execution>
-								<id>install-artifact</id>
-								<configuration>
-									<verbose>false</verbose>
-									<resources>
-										<resource>
-											<runIf>{{ osName.contains("Windows") }}</runIf>
-											<directory>${project.basedir}/target</directory>
-											<targetPath>${user.home}/AppData/Roaming/.spoutcraft/bin</targetPath>
-											<include>${project.artifactId}-${project.version}.jar</include>
-											<destFileName>${project.artifactId}.jar</destFileName>
-											<preservePath>true</preservePath>
-										</resource>
-										<!-- TODO: Copy lib folder to user folder .spoutcraft/bin/lib -->
-									</resources>
-								</configuration>
-								<phase>install</phase>
 								<goals>
 									<goal>copy</goal>
 								</goals>
@@ -559,6 +474,7 @@
 								<id>reobfuscate-mc</id>
 								<configuration>
 									<executable>python</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/reobfuscate.py</argument>
 										<argument>"$@"</argument>
@@ -590,7 +506,7 @@
 													return false;
 												}}
 											</runIf>
-											<directory>${project.basedir}/reobf/minecraft</directory>
+											<directory>${project.basedir}/mcp/reobf/minecraft</directory>
 											<targetPath>${project.basedir}/target/classes</targetPath>
 											<include>**/*</include>
 											<preservePath>true</preservePath>
@@ -598,36 +514,6 @@
 									</resources>
 								</configuration>
 								<phase>prepare-package</phase>
-								<goals>
-									<goal>copy</goal>
-								</goals>
-							</execution>
-							<!-- Copy compiled jar to user folder -->
-							<execution>
-								<id>install-artifact</id>
-								<configuration>
-									<verbose>false</verbose>
-									<resources>
-										<resource>
-											<runIf>{{ osName.contains("Mac") }}</runIf>
-											<directory>${project.basedir}/target</directory>
-											<targetPath>${user.home}/Application Support/.spoutcraft/bin</targetPath>
-											<include>${project.artifactId}-${project.version}.jar</include>
-											<destFileName>${project.artifactId}.jar</destFileName>
-											<preservePath>true</preservePath>
-										</resource>
-										<resource>
-											<runIf>{{ osName.contains("Linux") }}</runIf>
-											<directory>${project.basedir}/target</directory>
-											<targetPath>${user.home}/.spoutcraft/bin</targetPath>
-											<include>${project.artifactId}-${project.version}.jar</include>
-											<destFileName>${project.artifactId}.jar</destFileName>
-											<preservePath>true</preservePath>
-										</resource>
-										<!-- TODO: Copy lib folder to user folder .spoutcraft/bin/lib -->
-									</resources>
-								</configuration>
-								<phase>install</phase>
 								<goals>
 									<goal>copy</goal>
 								</goals>
