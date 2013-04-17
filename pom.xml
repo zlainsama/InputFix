@@ -276,7 +276,7 @@
 								<id>setup-forge</id>
 								<configuration>
 									<skip>${forge.skip}</skip>
-									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<executable>${project.basedir}/forge/fml/python/python_fml</executable>
 									<arguments>
 										<argument>forge/install.py</argument>
 										<argument>"$@"</argument>
@@ -291,7 +291,7 @@
 							<execution>
 								<id>setup-mc</id>
 								<configuration>
-									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<executable>${project.basedir}/forge/fml/python/python_fml</executable>
 									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/decompile.py</argument>
@@ -307,7 +307,7 @@
 							<execution>
 								<id>recompile-mc</id>
 								<configuration>
-									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<executable>${project.basedir}/forge/fml/python/python_fml</executable>
 									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/recompile.py</argument>
@@ -408,7 +408,7 @@
 							<execution>
 								<id>reobfuscate-mc</id>
 								<configuration>
-									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<executable>${project.basedir}/forge/fml/python/python_fml</executable>
 									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/reobfuscate.py</argument>
