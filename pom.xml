@@ -1,0 +1,527 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- Project information -->
+	<name>InputFix</name>
+	<groupId>lain.mods.inputfix</groupId>
+	<artifactId>InputFix</artifactId>
+	<version>1.5.1</version>
+	<description>InputFix is a way to enable multi word input via input methods in minecraft.</description>
+
+	<!-- Build properties -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<minecraftVersion>1.5.1</minecraftVersion>
+		<minecraft_Version>1_5_1</minecraft_Version>
+		<lwjglVersion>2.4</lwjglVersion>
+		<mcpVersion>744</mcpVersion>
+		<buildNumber>0</buildNumber>
+		<forgeVersion>7.7.1.650</forgeVersion>
+		<forgeBuildNumber>650</forgeBuildNumber>
+		<mcpURL>http://mcp.ocean-labs.de/files/mcp${mcpVersion}.zip</mcpURL>
+		<forgeURL>http://files.minecraftforge.net/minecraftforge/minecraftforge-src-${minecraftVersion}-${forgeVersion}.zip</forgeURL>
+	</properties>
+
+	<!-- Dependency repositories -->
+	<repositories>
+		<repository>
+			<id>spout-repo</id>
+			<url>http://repo.spout.org</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<!-- Build plugin repositories -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spout-repo</id>
+			<url>http://repo.spout.org</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<!-- Build configuration -->
+	<build>
+		<defaultGoal>clean package</defaultGoal>
+		<finalName>${project.name}</finalName>
+
+		<!-- Resources to include -->
+		<resources>
+			<!-- Static resources -->
+			<resource>
+				<filtering>false</filtering>
+				<targetPath>.</targetPath>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<includes>
+					<include>echars.txt</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<!-- Build plugins -->
+		<plugins>
+			<!-- File downloading plugin -->
+			<plugin>
+				<groupId>com.github.goldin</groupId>
+				<artifactId>copy-maven-plugin</artifactId>
+				<version>0.2.5</version>
+				<executions>
+					<execution>
+						<id>setup-workspace</id>
+						<configuration>
+							<verbose>false</verbose>
+							<failIfNotFound>false</failIfNotFound>
+							<skipIdentical>true</skipIdentical>
+							<resources>
+								<!-- Download the forge src -->
+								<resource>
+									<runIf>
+										{{
+											if (!(new File(project.basedir, "forge").isDirectory())) { return true; }
+											new File(project.basedir, "forge/forgeversion.properties").eachLine { line -> if (!(line.contains("forge.build.number=" + forgeBuildNumber))) return true; }
+											return false;
+										}}
+									</runIf>
+									<targetPath>${project.basedir}</targetPath>
+									<file>${forgeURL}</file>
+									<unpack>true</unpack>
+									<useTrueZipForUnpack>false</useTrueZipForUnpack>
+									<preservePath>true</preservePath>
+									<zipEntries>
+										<zipEntry>forge/**</zipEntry>
+									</zipEntries>
+								</resource>
+							</resources>
+						</configuration>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+					<!-- Backup decompiled Minecraft source -->
+					<execution>
+						<id>backup-source</id>
+						<configuration>
+							<verbose>false</verbose>
+							<resources>
+								<resource>
+									<runIf>
+										{{
+											if (new File(project.basedir, "mcp/src/backup/minecraft/" + minecraftVersion).isDirectory()) { return false; }
+											if (new File(project.basedir, "mcp/src/minecraft").isDirectory()) { return true; }
+											return false;
+										}}
+									</runIf>
+									<directory>${project.basedir}/mcp/src/minecraft</directory>
+									<targetPath>${project.basedir}/mcp/src/backup/minecraft/${minecraftVersion}</targetPath>
+									<include>**/*</include>
+									<preservePath>true</preservePath>
+								</resource>
+							</resources>
+						</configuration>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+					<!-- Refresh source code for building -->
+					<execution>
+						<id>refresh-source</id>
+						<configuration>
+							<verbose>false</verbose>
+							<resources>
+								<resource>
+									<runIf>
+										{{
+											if (!(new File(project.basedir, "mcp/src/backup/minecraft/" + minecraftVersion).isDirectory())) { return false; }
+											return true;
+										}}
+									</runIf>
+									<directory>${project.basedir}/mcp/src/backup/minecraft/${minecraftVersion}</directory>
+									<targetPath>${project.basedir}/mcp/src/minecraft</targetPath>
+									<include>**/*</include>
+									<preservePath>true</preservePath>
+								</resource>
+							</resources>
+						</configuration>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+					<!-- Copy project source to Minecraft directory -->
+					<execution>
+						<id>copy-source</id>
+						<configuration>
+							<verbose>false</verbose>
+							<resources>
+								<resource>
+									<runIf>
+										{{
+											if (new File(project.basedir, "src").isDirectory()) { return true; }
+											return false;
+										}}
+									</runIf>
+									<directory>${project.basedir}/src/main/java</directory>
+									<targetPath>${project.basedir}/mcp/src/minecraft</targetPath>
+									<include>**/*</include>
+									<preservePath>true</preservePath>
+								</resource>
+							</resources>
+						</configuration>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+					<!-- Cleanup workspace -->
+					<execution>
+						<id>clean-workspace</id>
+						<configuration>
+							<verbose>false</verbose>
+							<failIfNotFound>false</failIfNotFound>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/mcp/</directory>
+									<includes>
+										<include>logs/**</include>
+										<include>reobf/**</include>
+										<include>src/minecraft</include>
+									</includes>
+									<clean>true</clean>
+									<cleanEmptyDirectories>true</cleanEmptyDirectories>
+								</resource>
+							</resources>
+						</configuration>
+						<phase>clean</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Release version plugin -->
+			<plugin>
+				<groupId>com.sourcesense.maven</groupId>
+				<artifactId>maven-nosnapshot-plugin</artifactId>
+				<version>0.0.7</version>
+				<executions>
+					<execution>
+						<configuration>
+							<version>${project.version}</version>
+							<propertyName>releaseVersion</propertyName>
+						</configuration>
+						<phase>initialize</phase>
+						<goals>
+							<goal>strip</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Disable compiler plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<excludes>
+						<exclude>**/*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<!-- Maven jar plugin -->
+			<plugin> 
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <version>2.4</version>
+		    <configuration>
+	        <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+            <manifestEntries>
+              <FMLCorePlugin>lain.mods.inputfix.InputFix</FMLCorePlugin>
+            </manifestEntries>
+	        </archive>
+		    </configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- Build profiles -->
+	<profiles>
+		<!-- Activate on Windows -->
+		<profile>
+			<id>mcp-win</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<!-- Program executor plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<executions>
+							<!-- Install Forge -->
+							<execution>
+								<id>setup-forge</id>
+								<configuration>
+									<skip>${forge.skip}</skip>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<arguments>
+										<argument>forge/install.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<!-- Decompile Minecraft using MCP
+							<execution>
+								<id>setup-mc</id>
+								<configuration>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
+									<arguments>
+										<argument>runtime/decompile.py</argument>
+										<argument>%*</argument>
+									</arguments>
+								</configuration>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution> -->
+							<!-- Compile Minecraft using MCP -->
+							<execution>
+								<id>recompile-mc</id>
+								<configuration>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
+									<arguments>
+										<argument>runtime/recompile.py</argument>
+										<argument>%*</argument>
+									</arguments>
+								</configuration>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- Activate on Unix/Mac -->
+		<profile>
+			<id>mcp-unix</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<!-- Program executor plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<executions>
+							<!-- Install Forge -->
+							<execution>
+								<id>setup-forge</id>
+								<configuration>
+									<skip>${forge.skip}</skip>
+									<executable>python</executable>
+									<arguments>
+										<argument>forge/install.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<!-- Decompile Minecraft using MCP
+							<execution>
+								<id>setup-mc</id>
+								<configuration>
+									<executable>python</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
+									<arguments>
+										<argument>runtime/decompile.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution> -->
+							<!-- Compile Minecraft using MCP -->
+							<execution>
+								<id>recompile-mc</id>
+								<configuration>
+									<executable>python</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
+									<arguments>
+										<argument>runtime/recompile.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- For final release JAR only on Windows -->
+		<profile>
+			<id>mcp-final-win</id>
+			<build>
+				<plugins>
+					<!-- Program executor plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<executions>
+							<!-- Reobfuscate Minecraft using MCP -->
+							<execution>
+								<id>reobfuscate-mc</id>
+								<configuration>
+									<executable>${project.basedir}/mcp/runtime/bin/python/python_mcp</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
+									<arguments>
+										<argument>runtime/reobfuscate.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- File downloading plugin -->
+					<plugin>
+						<groupId>com.github.goldin</groupId>
+						<artifactId>copy-maven-plugin</artifactId>
+						<version>0.2.5</version>
+						<executions>
+							<!-- Copy compiled classes to target directory -->
+							<execution>
+								<id>copy-compiled</id>
+								<configuration>
+									<verbose>false</verbose>
+									<resources>
+										<resource>
+											<runIf>
+												{{
+													if (new File(project.basedir, "target").isDirectory()) { return true; }
+													return false;
+												}}
+											</runIf>
+											<directory>${project.basedir}/mcp/reobf/minecraft</directory>
+											<targetPath>${project.basedir}/target/classes</targetPath>
+											<include>**/*</include>
+											<preservePath>true</preservePath>
+										</resource>
+									</resources>
+								</configuration>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- For final release JAR only on Unix/Mac -->
+		<profile>
+			<id>mcp-final-unix</id>
+			<build>
+				<plugins>
+					<!-- Program executor plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<executions>
+							<!-- Reobfuscate Minecraft using MCP -->
+							<execution>
+								<id>reobfuscate-mc</id>
+								<configuration>
+									<executable>python</executable>
+									<workingDirectory>${project.basedir}/mcp</workingDirectory>
+									<arguments>
+										<argument>runtime/reobfuscate.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- File downloading plugin -->
+					<plugin>
+						<groupId>com.github.goldin</groupId>
+						<artifactId>copy-maven-plugin</artifactId>
+						<version>0.2.5</version>
+						<executions>
+							<!-- Copy compiled classes to target directory -->
+							<execution>
+								<id>copy-compiled</id>
+								<configuration>
+									<verbose>false</verbose>
+									<resources>
+										<resource>
+											<runIf>
+												{{
+													if (new File(project.basedir, "target").isDirectory()) { return true; }
+													return false;
+												}}
+											</runIf>
+											<directory>${project.basedir}/mcp/reobf/minecraft</directory>
+											<targetPath>${project.basedir}/target/classes</targetPath>
+											<include>**/*</include>
+											<preservePath>true</preservePath>
+										</resource>
+									</resources>
+								</configuration>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
