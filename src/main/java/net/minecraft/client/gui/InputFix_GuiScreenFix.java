@@ -56,8 +56,9 @@ public class InputFix_GuiScreenFix
                 {
                     k = 29;
                 }
-                if ((byte) c < 0 && Keyboard.next())
+                if (c > 0x7F && c <= 0xFF)
                 {
+                    Keyboard.next();
                     int k2 = Keyboard.getEventKey();
                     char c2 = Keyboard.getEventCharacter();
                     try
@@ -73,11 +74,9 @@ public class InputFix_GuiScreenFix
                         gui.keyTyped(c, k);
                         gui.keyTyped(c2, k2);
                     }
+                    continue;
                 }
-                else
-                {
-                    gui.keyTyped(c, k);
-                }
+                gui.keyTyped(c, k);
             }
             while (Keyboard.next());
         }
