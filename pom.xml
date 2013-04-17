@@ -412,6 +412,7 @@
 									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/reobfuscate.py</argument>
+										<argument>"--srgnames"</argument>
 										<argument>"$@"</argument>
 									</arguments>
 								</configuration>
@@ -477,6 +478,7 @@
 									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/reobfuscate.py</argument>
+										<argument>"--srgnames"</argument>
 										<argument>"$@"</argument>
 									</arguments>
 								</configuration>

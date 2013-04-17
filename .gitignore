@@ -166,3 +166,5 @@ pip-log.txt
 forge/
 # MCP
 mcp/
+
+target/*/
