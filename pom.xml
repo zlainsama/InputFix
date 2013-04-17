@@ -279,7 +279,6 @@
 									<executable>${project.basedir}/forge/fml/python/python_fml</executable>
 									<arguments>
 										<argument>forge/install.py</argument>
-										<argument>"$@"</argument>
 									</arguments>
 								</configuration>
 								<phase>generate-sources</phase>
@@ -348,7 +347,6 @@
 									<executable>python</executable>
 									<arguments>
 										<argument>forge/install.py</argument>
-										<argument>"$@"</argument>
 									</arguments>
 								</configuration>
 								<phase>generate-sources</phase>
@@ -412,8 +410,8 @@
 									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/reobfuscate.py</argument>
-										<argument>"--srgnames"</argument>
-										<argument>"$@"</argument>
+										<argument>--srgnames</argument>
+										<argument>%*</argument>
 									</arguments>
 								</configuration>
 								<phase>process-sources</phase>
@@ -478,7 +476,7 @@
 									<workingDirectory>${project.basedir}/mcp</workingDirectory>
 									<arguments>
 										<argument>runtime/reobfuscate.py</argument>
-										<argument>"--srgnames"</argument>
+										<argument>--srgnames</argument>
 										<argument>"$@"</argument>
 									</arguments>
 								</configuration>

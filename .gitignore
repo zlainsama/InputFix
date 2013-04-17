@@ -166,5 +166,5 @@ pip-log.txt
 forge/
 # MCP
 mcp/
-
-target/*/
+# Maven
+target/
