@@ -56,9 +56,8 @@ public class InputFix_GuiScreenFix
                 {
                     k = 29;
                 }
-                if (c > 0x7F && c <= 0xFF)
+                if (c > 0x7F && c <= 0xFF && Keyboard.next())
                 {
-                    Keyboard.next();
                     int k2 = Keyboard.getEventKey();
                     char c2 = Keyboard.getEventCharacter();
                     try
