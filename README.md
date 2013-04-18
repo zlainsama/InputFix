@@ -6,6 +6,13 @@ InputFix is a way to enable multi word input via input methods in minecraft.
 Build
 --------------------
 
-  + Maven 2 or 3
-  + Type `mvn clean package -P mcp-final-win` (mcp-final-unix for unix system)
-  + For second and later build , type `mvn clean package -P mcp-final-win -Dforge.skip=true`
+  + You need [Maven](http://maven.apache.org/) 2 or 3
+  + This Mod is following [ForgeMod](https://github.com/agaricusb/ForgeMod)
+  + Run Command:
+
+  ```
+    mvn initialize -P -built
+    mvn package
+  ```
+
+  + for USER: __it's COREMODS ,not mods__
