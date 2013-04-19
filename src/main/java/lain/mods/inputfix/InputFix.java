@@ -26,7 +26,7 @@ public class InputFix implements IFMLLoadingPlugin
     @Override
     public String getModContainerClass()
     {
-        return null;
+        return "lain.mods.inputfix.InjectedModContainer";
     }
 
     @Override
