@@ -8,7 +8,7 @@ import java.util.Properties;
 public class Config
 {
 
-    public static String encoding = "GBK";
+    public static String encoding = System.getProperty("file.encoding");
 
     public static String get(Properties props, String key, String defaultvalue)
     {
