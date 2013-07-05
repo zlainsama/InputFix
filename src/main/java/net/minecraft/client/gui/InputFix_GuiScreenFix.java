@@ -6,8 +6,21 @@ import org.lwjgl.input.Keyboard;
 
 public class InputFix_GuiScreenFix
 {
-    
-    private static final boolean flag = "2.9.0".equals(Sys.getVersion());
+
+    private static boolean flag;
+
+    static
+    {
+        try
+        {
+            flag = "2.9.0".equals(Sys.getVersion());
+        }
+        catch (Throwable t)
+        {
+            System.err.println(String.format("Error getting lwjgl version: %s", t.toString()));
+            flag = false;
+        }
+    }
 
     public static void handleKeyboardInput(GuiScreen gui)
     {
@@ -46,10 +59,7 @@ public class InputFix_GuiScreenFix
                     char c2 = Keyboard.getEventCharacter();
                     try
                     {
-                        c2 = new String(new byte[]
-                            {
-                            (byte) c, (byte) c2
-                            }, Config.encoding).charAt(0);
+                        c2 = new String(new byte[] { (byte) c, (byte) c2 }, Config.encoding).charAt(0);
                         gui.keyTyped(c2, k);
                     }
                     catch (Throwable t)
