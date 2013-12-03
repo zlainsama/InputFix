@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+version = "1.6.x-v4"
+group= "lain.mods.inputfix"
+archivesBaseName = "InputFix"
+
+minecraft {
+	version = "1.6.4-9.11.1.964"
+}
+
+jar
+{
+    manifest {
+	    attributes 'FMLCorePlugin': 'lain.mods.inputfix.InputFix'
+	}
+}

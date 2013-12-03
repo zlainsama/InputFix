@@ -11,12 +11,10 @@ public class ExpandedCharacters
     private static String getCharacters()
     {
         String s = "";
-
         try
         {
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(ExpandedCharacters.class.getResourceAsStream("/echars.txt"), "UTF-8"));
             String s1 = "";
-
             while ((s1 = bufferedreader.readLine()) != null)
             {
                 if (!s1.startsWith("#"))
@@ -24,14 +22,11 @@ public class ExpandedCharacters
                     s = s + s1;
                 }
             }
-
             bufferedreader.close();
         }
-        catch (Exception exception)
+        catch (Exception ignored)
         {
-            ;
         }
-
         return s;
     }
 

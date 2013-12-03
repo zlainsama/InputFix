@@ -2,15 +2,15 @@ package lain.mods.inputfix;
 
 import java.util.HashSet;
 import java.util.Set;
+import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
-import cpw.mods.fml.relauncher.IClassTransformer;
 
-public class ASMTransformer implements IClassTransformer
+public class InputFixTransformer implements IClassTransformer
 {
 
     class a extends ClassVisitor
@@ -21,11 +21,10 @@ public class ASMTransformer implements IClassTransformer
 
         public a(ClassVisitor cv)
         {
-            super(262144, cv);
+            super(Opcodes.ASM4, cv);
             cl = FMLDeobfuscatingRemapper.INSTANCE.unmap("net/minecraft/client/gui/GuiScreen");
             names = new HashSet<String>();
-            names.add("handleKeyboardInput");
-            names.add("func_73860_n");
+            names.add(InputFix.RUNTIME_DEOBF ? "func_73860_n" : "handleKeyboardInput");
         }
 
         @Override
@@ -36,11 +35,11 @@ public class ASMTransformer implements IClassTransformer
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
                 mv.visitCode();
                 mv.visitVarInsn(Opcodes.ALOAD, 0);
-                mv.visitMethodInsn(Opcodes.INVOKESTATIC, "net/minecraft/client/gui/InputFix_GuiScreenFix", "handleKeyboardInput", "(Lnet/minecraft/client/gui/GuiScreen;)V");
+                mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/inputfix/GuiScreenFix", "handleKeyboardInput", "(Lnet/minecraft/client/gui/GuiScreen;)V");
                 mv.visitInsn(Opcodes.RETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();
-                return new dummy();
+                return new d();
             }
             return super.visitMethod(access, name, desc, signature, exceptions);
         }
@@ -52,7 +51,7 @@ public class ASMTransformer implements IClassTransformer
 
         public b(ClassVisitor cv)
         {
-            super(262144, cv);
+            super(Opcodes.ASM4, cv);
         }
 
         @Override
@@ -71,11 +70,10 @@ public class ASMTransformer implements IClassTransformer
 
         public c(MethodVisitor mv)
         {
-            super(262144, mv);
+            super(Opcodes.ASM4, mv);
             cl = "net/minecraft/util/ChatAllowedCharacters";
             names = new HashSet<String>();
-            names.add("allowedCharacters");
-            names.add("field_71568_a");
+            names.add(InputFix.RUNTIME_DEOBF ? "field_71568_a" : "allowedCharacters");
         }
 
         @Override
@@ -91,12 +89,12 @@ public class ASMTransformer implements IClassTransformer
 
     }
 
-    class dummy extends MethodVisitor
+    class d extends MethodVisitor
     {
 
-        public dummy()
+        public d()
         {
-            super(262144, null);
+            super(Opcodes.ASM4, null);
         }
 
     }
