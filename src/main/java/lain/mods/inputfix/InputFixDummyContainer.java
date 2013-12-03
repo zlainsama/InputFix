@@ -16,7 +16,7 @@ public class InputFixDummyContainer extends DummyModContainer
         meta.modId = "InputFix";
         meta.name = "InputFix";
         meta.version = "1.6.x-v4";
-        meta.authorList = Arrays.asList("Lain");
+        meta.authorList = Arrays.asList("zlainsama");
         meta.description = "InputFix is a way to enable multi-byte input method in Minecraft.";
         meta.credits = "Dear_ICE, pa001024, sunny00123, crafteverywhere";
         meta.url = "https://github.com/zlainsama/inputfix";
