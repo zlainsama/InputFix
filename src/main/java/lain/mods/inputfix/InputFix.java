@@ -12,6 +12,12 @@ public class InputFix implements IFMLLoadingPlugin
     public static boolean RUNTIME_DEOBF = true;
 
     @Override
+    public String getAccessTransformerClass()
+    {
+        return null;
+    }
+
+    @Override
     public String[] getASMTransformerClass()
     {
         return new String[] { "lain.mods.inputfix.InputFixTransformer" };
