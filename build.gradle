@@ -22,12 +22,12 @@ group= "lain.mods.inputfix"
 archivesBaseName = "InputFix"
 
 minecraft {
-    version = "1.7.2-10.12.0.968"
+    version = "1.7.2-10.12.0.976"
 }
 
 jar
 {
     manifest {
-	    attributes 'FMLCorePlugin': 'lain.mods.inputfix.InputFix'
-	}
+        attributes 'FMLCorePlugin': 'lain.mods.inputfix.InputFix'
+    }
 }
