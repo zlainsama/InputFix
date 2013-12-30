@@ -24,7 +24,7 @@ public class InputFixTransformer implements IClassTransformer
             super(Opcodes.ASM4, cv);
             cl = FMLDeobfuscatingRemapper.INSTANCE.unmap("net/minecraft/client/gui/GuiScreen");
             names = new HashSet<String>();
-            names.add(InputFix.RUNTIME_DEOBF ? "func_73860_n" : "handleKeyboardInput");
+            names.add(InputFix.RUNTIME_DEOBF ? "func_146282_l" : "handleKeyboardInput");
         }
 
         @Override
