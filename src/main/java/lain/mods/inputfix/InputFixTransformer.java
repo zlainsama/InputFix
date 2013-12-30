@@ -39,60 +39,17 @@ public class InputFixTransformer implements IClassTransformer
                 mv.visitInsn(Opcodes.RETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();
-                return new d();
+                return new b();
             }
             return super.visitMethod(access, name, desc, signature, exceptions);
         }
 
     }
 
-    class b extends ClassVisitor
+    class b extends MethodVisitor
     {
 
-        public b(ClassVisitor cv)
-        {
-            super(Opcodes.ASM4, cv);
-        }
-
-        @Override
-        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
-        {
-            return new c(super.visitMethod(access, name, desc, signature, exceptions));
-        }
-
-    }
-
-    class c extends MethodVisitor
-    {
-
-        Set<String> names;
-        String cl;
-
-        public c(MethodVisitor mv)
-        {
-            super(Opcodes.ASM4, mv);
-            cl = "net/minecraft/util/ChatAllowedCharacters";
-            names = new HashSet<String>();
-            names.add(InputFix.RUNTIME_DEOBF ? "field_71568_a" : "allowedCharacters");
-        }
-
-        @Override
-        public void visitFieldInsn(int opcode, String owner, String name, String desc)
-        {
-            if (cl.equals(FMLDeobfuscatingRemapper.INSTANCE.map(owner)) && names.contains(FMLDeobfuscatingRemapper.INSTANCE.mapFieldName(owner, name, desc)))
-            {
-                owner = "lain/mods/inputfix/ExpandedCharacters";
-                name = "characters";
-            }
-            super.visitFieldInsn(opcode, owner, name, desc);
-        }
-
-    }
-
-    class d extends MethodVisitor
-    {
-
-        public d()
+        public b()
         {
             super(Opcodes.ASM4, null);
         }
@@ -104,12 +61,6 @@ public class InputFixTransformer implements IClassTransformer
     {
         if ("net.minecraft.client.gui.GuiScreen".equals(transformedName))
             return transform001(bytes);
-        if ("net.minecraft.client.gui.GuiMultiplayer".equals(transformedName))
-            return transform002(bytes);
-        if ("net.minecraft.client.gui.inventory.GuiEditSign".equals(transformedName))
-            return transform002(bytes);
-        if ("net.minecraft.network.NetServerHandler".equals(transformedName))
-            return transform002(bytes);
         return bytes;
     }
 
@@ -118,14 +69,6 @@ public class InputFixTransformer implements IClassTransformer
         ClassReader classReader = new ClassReader(bytes);
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         classReader.accept(new a(classWriter), ClassReader.EXPAND_FRAMES);
-        return classWriter.toByteArray();
-    }
-
-    private byte[] transform002(byte[] bytes)
-    {
-        ClassReader classReader = new ClassReader(bytes);
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        classReader.accept(new b(classWriter), ClassReader.EXPAND_FRAMES);
         return classWriter.toByteArray();
     }
 

@@ -16,7 +16,7 @@ public class GuiScreenFix
     {
         try
         {
-            mc = GuiScreen.class.getDeclaredField(InputFix.RUNTIME_DEOBF ? "field_73882_e" : "mc");
+            mc = GuiScreen.class.getDeclaredField(InputFix.RUNTIME_DEOBF ? "field_146297_k" : "mc");
             mc.setAccessible(true);
             keyTyped = GuiScreen.class.getDeclaredMethod(InputFix.RUNTIME_DEOBF ? "func_73869_a" : "keyTyped", char.class, int.class);
             keyTyped.setAccessible(true);
