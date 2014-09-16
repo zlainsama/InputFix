@@ -1,6 +1,7 @@
 package lain.mods.inputfix;
 
 import java.util.Map;
+import lain.mods.inputfix.impl.GuiScreenFixOthers;
 import lain.mods.inputfix.impl.GuiScreenFixWindows;
 import lain.mods.inputfix.interfaces.IGuiScreenFix;
 import lain.mods.inputfix.utils.OSDetector;
@@ -20,8 +21,10 @@ public class InputFixSetup implements IFMLCallHook
                 impl = new GuiScreenFixWindows();
                 break;
             case Linux:
+                impl = new GuiScreenFixOthers();
                 break;
             case Mac:
+                impl = new GuiScreenFixOthers();
                 break;
             case Unknown:
             default:
