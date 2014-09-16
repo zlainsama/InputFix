@@ -7,8 +7,11 @@ import org.lwjgl.input.Keyboard;
 public class GuiScreenFixWindows implements IGuiScreenFix
 {
 
-    public void handleKeyboardInput(IGuiScreen gui, char c, int k)
+    @Override
+    public void handleKeyboardInput(IGuiScreen gui)
     {
+        char c = Keyboard.getEventCharacter();
+        int k = Keyboard.getEventKey();
         if (Keyboard.getEventKeyState() || (k == 0 && Character.isDefined(c)))
         {
             gui.keyTyped(c, k);

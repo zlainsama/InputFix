@@ -32,13 +32,10 @@ public class GuiScreenFix
     {
         try
         {
-            int k = Keyboard.getEventKey();
-            char c = Keyboard.getEventCharacter();
-
             if (InputFixSetup.impl != null)
             {
                 final Object obj = gui;
-                IGuiScreen g = new IGuiScreen()
+                InputFixSetup.impl.handleKeyboardInput(new IGuiScreen()
                 {
                     public void keyTyped(char c, int k)
                     {
@@ -51,12 +48,11 @@ public class GuiScreenFix
                             throw new RuntimeException(t);
                         }
                     }
-                };
-                InputFixSetup.impl.handleKeyboardInput(g, c, k);
+                });
             }
             else if (Keyboard.getEventKeyState())
             {
-                keyTyped.invoke(gui, c, k);
+                keyTyped.invoke(gui, Keyboard.getEventCharacter(), Keyboard.getEventKey());
             }
 
             ((Minecraft) mc.get(gui)).func_152348_aa();
