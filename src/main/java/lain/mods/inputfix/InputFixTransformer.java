@@ -1,6 +1,5 @@
 package lain.mods.inputfix;
 
-import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
@@ -8,6 +7,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import com.google.common.collect.ImmutableSet;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
 public class InputFixTransformer implements IClassTransformer
@@ -23,8 +23,7 @@ public class InputFixTransformer implements IClassTransformer
         {
             super(Opcodes.ASM4, cv);
             cl = FMLDeobfuscatingRemapper.INSTANCE.unmap("net/minecraft/client/gui/GuiScreen");
-            names = new HashSet<String>();
-            names.add(InputFix.RUNTIME_DEOBF ? "func_146282_l" : "handleKeyboardInput");
+            names = ImmutableSet.of("func_146282_l", "handleKeyboardInput");
         }
 
         @Override
@@ -56,12 +55,11 @@ public class InputFixTransformer implements IClassTransformer
 
     }
 
-    @Override
-    public byte[] transform(String name, String transformedName, byte[] bytes)
+    public byte[] transform(String arg0, String arg1, byte[] arg2)
     {
-        if ("net.minecraft.client.gui.GuiScreen".equals(transformedName))
-            return transform001(bytes);
-        return bytes;
+        if ("net.minecraft.client.gui.GuiScreen".equals(arg1))
+            return transform001(arg2);
+        return arg2;
     }
 
     private byte[] transform001(byte[] bytes)

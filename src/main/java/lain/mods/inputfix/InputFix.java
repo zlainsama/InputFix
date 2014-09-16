@@ -11,34 +11,29 @@ public class InputFix implements IFMLLoadingPlugin
 
     public static boolean RUNTIME_DEOBF = true;
 
-    @Override
     public String getAccessTransformerClass()
     {
         return null;
     }
 
-    @Override
     public String[] getASMTransformerClass()
     {
         return new String[] { "lain.mods.inputfix.InputFixTransformer" };
     }
 
-    @Override
     public String getModContainerClass()
     {
         return "lain.mods.inputfix.InputFixDummyContainer";
     }
 
-    @Override
     public String getSetupClass()
     {
-        return null;
+        return "lain.mods.inputfix.InputFixSetup";
     }
 
-    @Override
-    public void injectData(Map<String, Object> data)
+    public void injectData(Map<String, Object> arg0)
     {
-        RUNTIME_DEOBF = (Boolean) data.get("runtimeDeobfuscationEnabled");
+        RUNTIME_DEOBF = (Boolean) arg0.get("runtimeDeobfuscationEnabled");
     }
 
 }
