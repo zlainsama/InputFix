@@ -16,15 +16,14 @@ public class InputFixSetup implements IFMLCallHook
         OSDetector.OS OS = OSDetector.detectOS();
         switch (OS)
         {
+            case Windows:
+                impl = new GuiScreenFixWindows();
+                break;
             case Linux:
                 break;
             case Mac:
                 break;
             case Unknown:
-                break;
-            case Windows:
-                impl = new GuiScreenFixWindows();
-                break;
             default:
                 break;
         }
