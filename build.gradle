@@ -32,3 +32,12 @@ jar
         attributes 'FMLCorePlugin': 'lain.mods.inputfix.InputFix'
     }
 }
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += [ '-Xlint:all', '-Xlint:-path' ]
+    options.deprecation = true
+    options.encoding = 'utf8'
+}
