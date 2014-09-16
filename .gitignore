@@ -218,4 +218,4 @@ pip-log.txt
 .gradle/
 eclipse/
 runtime/
-
+gradle.properties
