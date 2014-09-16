@@ -11,10 +11,9 @@ public class InputFixSetup implements IFMLCallHook
 
     public static IGuiScreenFix impl;
 
-    OSDetector.OS OS = OSDetector.detectOS();
-
     public Void call() throws Exception
     {
+        OSDetector.OS OS = OSDetector.detectOS();
         switch (OS)
         {
             case Linux:
