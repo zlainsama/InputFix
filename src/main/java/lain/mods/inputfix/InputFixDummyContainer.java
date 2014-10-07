@@ -1,10 +1,10 @@
 package lain.mods.inputfix;
 
 import java.util.Arrays;
+import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.LoadController;
+import net.minecraftforge.fml.common.ModMetadata;
 import com.google.common.eventbus.EventBus;
-import cpw.mods.fml.common.DummyModContainer;
-import cpw.mods.fml.common.LoadController;
-import cpw.mods.fml.common.ModMetadata;
 
 public class InputFixDummyContainer extends DummyModContainer
 {
@@ -15,7 +15,7 @@ public class InputFixDummyContainer extends DummyModContainer
         ModMetadata meta = getMetadata();
         meta.modId = "InputFix";
         meta.name = "InputFix";
-        meta.version = "1.7.x-v3-dev";
+        meta.version = "1.8-v1-dev";
         meta.authorList = Arrays.asList("zlainsama");
         meta.description = "InputFix is a way to enable multi-byte input method in Minecraft.";
         meta.credits = "Dear_ICE, pa001024, sunny00123, crafteverywhere";

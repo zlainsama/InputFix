@@ -2,13 +2,13 @@ package lain.mods.inputfix;
 
 import java.util.Set;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import com.google.common.collect.ImmutableSet;
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
 public class InputFixTransformer implements IClassTransformer
 {
@@ -21,7 +21,7 @@ public class InputFixTransformer implements IClassTransformer
 
         public a(ClassVisitor cv)
         {
-            super(Opcodes.ASM4, cv);
+            super(Opcodes.ASM5, cv);
             cl = FMLDeobfuscatingRemapper.INSTANCE.unmap("net/minecraft/client/gui/GuiScreen");
             names = ImmutableSet.of("func_146282_l", "handleKeyboardInput");
         }
@@ -34,7 +34,7 @@ public class InputFixTransformer implements IClassTransformer
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
                 mv.visitCode();
                 mv.visitVarInsn(Opcodes.ALOAD, 0);
-                mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/inputfix/GuiScreenFix", "handleKeyboardInput", "(Lnet/minecraft/client/gui/GuiScreen;)V");
+                mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/inputfix/GuiScreenFix", "handleKeyboardInput", "(Lnet/minecraft/client/gui/GuiScreen;)V", false);
                 mv.visitInsn(Opcodes.RETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();
@@ -50,11 +50,12 @@ public class InputFixTransformer implements IClassTransformer
 
         public b()
         {
-            super(Opcodes.ASM4, null);
+            super(Opcodes.ASM5, null);
         }
 
     }
 
+    @Override
     public byte[] transform(String arg0, String arg1, byte[] arg2)
     {
         if ("net.minecraft.client.gui.GuiScreen".equals(arg1))

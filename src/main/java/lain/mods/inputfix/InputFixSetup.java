@@ -5,13 +5,14 @@ import lain.mods.inputfix.impl.GuiScreenFixOthers;
 import lain.mods.inputfix.impl.GuiScreenFixWindows;
 import lain.mods.inputfix.interfaces.IGuiScreenFix;
 import lain.mods.inputfix.utils.OSDetector;
-import cpw.mods.fml.relauncher.IFMLCallHook;
+import net.minecraftforge.fml.relauncher.IFMLCallHook;
 
 public class InputFixSetup implements IFMLCallHook
 {
 
     public static IGuiScreenFix impl;
 
+    @Override
     public Void call() throws Exception
     {
         OSDetector.OS OS = OSDetector.detectOS();
@@ -33,6 +34,7 @@ public class InputFixSetup implements IFMLCallHook
         return null;
     }
 
+    @Override
     public void injectData(Map<String, Object> arg0)
     {
     }

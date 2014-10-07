@@ -15,15 +15,17 @@ buildscript {
     }
 }
 
-apply plugin: 'forge'
+apply plugin: 'fml'
 
-version = "1.7.x-v3-dev"
+version = "1.8-v1-dev"
 group= "lain.mods.inputfix"
 archivesBaseName = "InputFix"
 
 minecraft {
-    version = "1.7.10-10.13.1.1217"
+    version = "1.8-7.10.99.1005-1.8"
     runDir = "eclipse"
+    
+    mappings = "snapshot_nodoc_20140930"
 }
 
 jar
@@ -31,6 +33,11 @@ jar
     manifest {
         attributes 'FMLCorePlugin': 'lain.mods.inputfix.InputFix'
     }
+}
+
+processResources
+{
+    from 'LICENSE.txt'
 }
 
 sourceCompatibility = '1.6'

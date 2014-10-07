@@ -55,7 +55,7 @@ public class GuiScreenFix
                 keyTyped.invoke(gui, Keyboard.getEventCharacter(), Keyboard.getEventKey());
             }
 
-            ((Minecraft) mc.get(gui)).func_152348_aa();
+            ((Minecraft) mc.get(gui)).dispatchKeypresses();
         }
         catch (Throwable t)
         {
