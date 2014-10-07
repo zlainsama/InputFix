@@ -2,6 +2,7 @@ package lain.mods.inputfix;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import lain.mods.inputfix.interfaces.IGuiScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -31,17 +32,30 @@ public class GuiScreenFix
     {
         try
         {
-            int k = Keyboard.getEventKey();
-            char c = Keyboard.getEventCharacter();
-            if (Keyboard.getEventKeyState() || (k == 0 && Character.isDefined(c)))
+            if (InputFixSetup.impl != null)
             {
-                if (k == 87)
+                final Object obj = gui;
+                InputFixSetup.impl.handleKeyboardInput(new IGuiScreen()
                 {
-                    ((Minecraft) mc.get(gui)).toggleFullscreen();
-                    return;
-                }
-                keyTyped.invoke(gui, c, k);
+                    public void keyTyped(char c, int k)
+                    {
+                        try
+                        {
+                            keyTyped.invoke(obj, c, k);
+                        }
+                        catch (Throwable t)
+                        {
+                            throw new RuntimeException(t);
+                        }
+                    }
+                });
             }
+            else if (Keyboard.getEventKeyState())
+            {
+                keyTyped.invoke(gui, Keyboard.getEventCharacter(), Keyboard.getEventKey());
+            }
+
+            ((Minecraft) mc.get(gui)).dispatchKeypresses();
         }
         catch (Throwable t)
         {

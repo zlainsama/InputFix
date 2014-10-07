@@ -1,14 +1,14 @@
 package lain.mods.inputfix;
 
-import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import com.google.common.collect.ImmutableSet;
 
 public class InputFixTransformer implements IClassTransformer
 {
@@ -21,10 +21,9 @@ public class InputFixTransformer implements IClassTransformer
 
         public a(ClassVisitor cv)
         {
-            super(Opcodes.ASM4, cv);
+            super(Opcodes.ASM5, cv);
             cl = FMLDeobfuscatingRemapper.INSTANCE.unmap("net/minecraft/client/gui/GuiScreen");
-            names = new HashSet<String>();
-            names.add(InputFix.RUNTIME_DEOBF ? "func_146282_l" : "handleKeyboardInput");
+            names = ImmutableSet.of("func_146282_l", "handleKeyboardInput");
         }
 
         @Override
@@ -35,7 +34,7 @@ public class InputFixTransformer implements IClassTransformer
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
                 mv.visitCode();
                 mv.visitVarInsn(Opcodes.ALOAD, 0);
-                mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/inputfix/GuiScreenFix", "handleKeyboardInput", "(Lnet/minecraft/client/gui/GuiScreen;)V");
+                mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/inputfix/GuiScreenFix", "handleKeyboardInput", "(Lnet/minecraft/client/gui/GuiScreen;)V", false);
                 mv.visitInsn(Opcodes.RETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();
@@ -51,17 +50,17 @@ public class InputFixTransformer implements IClassTransformer
 
         public b()
         {
-            super(Opcodes.ASM4, null);
+            super(Opcodes.ASM5, null);
         }
 
     }
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] bytes)
+    public byte[] transform(String arg0, String arg1, byte[] arg2)
     {
-        if ("net.minecraft.client.gui.GuiScreen".equals(transformedName))
-            return transform001(bytes);
-        return bytes;
+        if ("net.minecraft.client.gui.GuiScreen".equals(arg1))
+            return transform001(arg2);
+        return arg2;
     }
 
     private byte[] transform001(byte[] bytes)

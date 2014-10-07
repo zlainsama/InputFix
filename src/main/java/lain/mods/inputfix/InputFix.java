@@ -1,10 +1,10 @@
 package lain.mods.inputfix;
 
 import java.util.Map;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name("InputFix")
-@IFMLLoadingPlugin.MCVersion("")
+@IFMLLoadingPlugin.MCVersion("1.8")
 @IFMLLoadingPlugin.TransformerExclusions("lain.mods.inputfix.")
 public class InputFix implements IFMLLoadingPlugin
 {
@@ -32,13 +32,13 @@ public class InputFix implements IFMLLoadingPlugin
     @Override
     public String getSetupClass()
     {
-        return null;
+        return "lain.mods.inputfix.InputFixSetup";
     }
 
     @Override
-    public void injectData(Map<String, Object> data)
+    public void injectData(Map<String, Object> arg0)
     {
-        RUNTIME_DEOBF = (Boolean) data.get("runtimeDeobfuscationEnabled");
+        RUNTIME_DEOBF = (Boolean) arg0.get("runtimeDeobfuscationEnabled");
     }
 
 }
