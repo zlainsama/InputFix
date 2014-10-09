@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 public class GuiScreenFix
 {
 
-    private static final Method keyTyped = ReflectionHelper.findMethod(GuiScreen.class, new String[] { "func_73869_a", "keyTyped" }, new Class[] { char.class, int.class });
+    private static final Method keyTyped = ReflectionHelper.findMethod(GuiScreen.class, new String[] { "func_73869_a", "keyTyped" }, new Class<?>[] { char.class, int.class });
     private static final IGuiScreen proxy = new IGuiScreen()
     {
         @Override
