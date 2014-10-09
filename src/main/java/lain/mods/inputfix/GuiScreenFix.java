@@ -2,46 +2,32 @@ package lain.mods.inputfix;
 
 import java.lang.reflect.Method;
 import lain.mods.inputfix.interfaces.IGuiScreen;
+import lain.mods.inputfix.utils.ReflectionHelper;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 public class GuiScreenFix
 {
 
-    private static Method keyTyped;
-
-    private static IGuiScreen proxy;
-    private static GuiScreen currentGui;
-
-    static
+    private static final Method keyTyped = ReflectionHelper.findMethod(GuiScreen.class, new String[] { "func_73869_a", "keyTyped" }, new Class[] { char.class, int.class });
+    private static final IGuiScreen proxy = new IGuiScreen()
     {
-        try
+        @Override
+        public void keyTyped(char c, int k)
         {
-            keyTyped = GuiScreen.class.getDeclaredMethod(InputFix.RUNTIME_DEOBF ? "func_73869_a" : "keyTyped", char.class, int.class);
-            keyTyped.setAccessible(true);
-        }
-        catch (Throwable t)
-        {
-            throw new RuntimeException(t);
-        }
-
-        proxy = new IGuiScreen()
-        {
-            @Override
-            public void keyTyped(char c, int k)
+            try
             {
-                try
-                {
-                    if (currentGui != null)
-                        keyTyped.invoke(currentGui, c, k);
-                }
-                catch (Throwable t)
-                {
-                    throw new RuntimeException(t);
-                }
+                if (currentGui != null)
+                    keyTyped.invoke(currentGui, c, k);
             }
-        };
-    }
+            catch (Throwable t)
+            {
+                throw new RuntimeException(t);
+            }
+        }
+    };
+
+    private static GuiScreen currentGui;
 
     public static void handleKeyboardInput(GuiScreen gui)
     {
