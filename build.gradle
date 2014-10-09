@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'fml'
 
-version = "1.8-v1-dev"
+version = "1.8-v2-dev"
 group= "lain.mods.inputfix"
 archivesBaseName = "InputFix"
 
