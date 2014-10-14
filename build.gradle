@@ -11,18 +11,19 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
 apply plugin: 'forge'
 
-version = "1.7.x-v2"
+version = "1.7.x-v3"
 group= "lain.mods.inputfix"
 archivesBaseName = "InputFix"
 
 minecraft {
-    version = "1.7.2-10.12.0.976"
+    version = "1.7.10-10.13.0.1208"
+    assetDir = "eclipse/assets"
 }
 
 jar
@@ -30,4 +31,18 @@ jar
     manifest {
         attributes 'FMLCorePlugin': 'lain.mods.inputfix.InputFix'
     }
+}
+
+processResources
+{
+    from 'LICENSE.txt'
+}
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += [ '-Xlint:all', '-Xlint:-path' ]
+    options.deprecation = true
+    options.encoding = 'utf8'
 }

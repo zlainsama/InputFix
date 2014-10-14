@@ -9,8 +9,6 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 public class InputFix implements IFMLLoadingPlugin
 {
 
-    public static boolean RUNTIME_DEOBF = true;
-
     @Override
     public String getAccessTransformerClass()
     {
@@ -32,13 +30,12 @@ public class InputFix implements IFMLLoadingPlugin
     @Override
     public String getSetupClass()
     {
-        return null;
+        return "lain.mods.inputfix.InputFixSetup";
     }
 
     @Override
-    public void injectData(Map<String, Object> data)
+    public void injectData(Map<String, Object> arg0)
     {
-        RUNTIME_DEOBF = (Boolean) data.get("runtimeDeobfuscationEnabled");
     }
 
 }
