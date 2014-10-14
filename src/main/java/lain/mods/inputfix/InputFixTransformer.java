@@ -1,6 +1,5 @@
 package lain.mods.inputfix;
 
-import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
@@ -8,6 +7,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import com.google.common.collect.ImmutableSet;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
 public class InputFixTransformer implements IClassTransformer
@@ -23,8 +23,7 @@ public class InputFixTransformer implements IClassTransformer
         {
             super(Opcodes.ASM4, cv);
             cl = FMLDeobfuscatingRemapper.INSTANCE.unmap("net/minecraft/client/gui/GuiScreen");
-            names = new HashSet<String>();
-            names.add(InputFix.RUNTIME_DEOBF ? "func_73860_n" : "handleKeyboardInput");
+            names = ImmutableSet.of("func_73860_n", "handleKeyboardInput");
         }
 
         @Override
@@ -72,8 +71,7 @@ public class InputFixTransformer implements IClassTransformer
         {
             super(Opcodes.ASM4, mv);
             cl = "net/minecraft/util/ChatAllowedCharacters";
-            names = new HashSet<String>();
-            names.add(InputFix.RUNTIME_DEOBF ? "field_71568_a" : "allowedCharacters");
+            names = ImmutableSet.of("field_71568_a", "allowedCharacters");
         }
 
         @Override
