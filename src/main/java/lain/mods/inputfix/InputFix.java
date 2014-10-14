@@ -4,12 +4,10 @@ import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name("InputFix")
-@IFMLLoadingPlugin.MCVersion("1.8")
+@IFMLLoadingPlugin.MCVersion("")
 @IFMLLoadingPlugin.TransformerExclusions("lain.mods.inputfix.")
 public class InputFix implements IFMLLoadingPlugin
 {
-
-    public static boolean RUNTIME_DEOBF = true;
 
     @Override
     public String getAccessTransformerClass()
@@ -38,7 +36,6 @@ public class InputFix implements IFMLLoadingPlugin
     @Override
     public void injectData(Map<String, Object> arg0)
     {
-        RUNTIME_DEOBF = (Boolean) arg0.get("runtimeDeobfuscationEnabled");
     }
 
 }
