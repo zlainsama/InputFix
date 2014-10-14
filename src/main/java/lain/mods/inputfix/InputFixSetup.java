@@ -22,10 +22,15 @@ public class InputFixSetup implements IFMLCallHook
                 impl = new GuiScreenFixWindows();
                 break;
             case Linux:
-                impl = new GuiScreenFixOthers();
-                break;
             case Mac:
-                impl = new GuiScreenFixOthers();
+                try
+                {
+                    impl = new GuiScreenFixOthers();
+                }
+                catch (Throwable t)
+                {
+                    impl = new GuiScreenFixWindows();
+                }
                 break;
             case Unknown:
             default:
