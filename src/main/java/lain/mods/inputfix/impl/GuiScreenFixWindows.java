@@ -14,6 +14,11 @@ public class GuiScreenFixWindows implements IGuiScreenFix
         int k = Keyboard.getEventKey();
         if (Keyboard.getEventKeyState() || (k == 0 && Character.isDefined(c)))
         {
+            if (k == 87)
+            {
+                gui.toggleFullscreen();
+                return;
+            }
             gui.keyTyped(c, k);
         }
     }

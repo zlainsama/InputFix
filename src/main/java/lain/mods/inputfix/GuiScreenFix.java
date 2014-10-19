@@ -34,6 +34,12 @@ public class GuiScreenFix
             return this;
         }
 
+        @Override
+        public void toggleFullscreen()
+        {
+            gui.mc.toggleFullscreen();
+        }
+
     }
 
     private static final ThreadLocal<Proxy> proxies = new ThreadLocal<Proxy>()
@@ -57,8 +63,6 @@ public class GuiScreenFix
             InputFixSetup.impl.handleKeyboardInput(p);
         else if (Keyboard.getEventKeyState())
             p.keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
-
-        gui.mc.func_152348_aa();
     }
 
 }

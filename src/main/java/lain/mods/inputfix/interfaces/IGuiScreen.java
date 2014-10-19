@@ -5,4 +5,6 @@ public interface IGuiScreen
 
     void keyTyped(char c, int k);
 
+    void toggleFullscreen();
+
 }

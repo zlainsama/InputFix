@@ -16,6 +16,11 @@ public class GuiScreenFixOthers implements IGuiScreenFix
         int k = Keyboard.getEventKey();
         if (Keyboard.getEventKeyState() || (k == 0 && Character.isDefined(c)))
         {
+            if (k == 87)
+            {
+                gui.toggleFullscreen();
+                return;
+            }
             if (k == 88)
             {
                 for (char c1 : Strings.nullToEmpty(JOptionPane.showInputDialog("")).toCharArray())
