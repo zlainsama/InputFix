@@ -20,3 +20,7 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+*.[bB][aA][tT]          text eol=crlf
+*.[cC][mM][dD]          text eol=crlf
+*.[pP][sS]1             text eol=crlf

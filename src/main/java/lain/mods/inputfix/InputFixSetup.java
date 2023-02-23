@@ -7,13 +7,12 @@ import lain.mods.inputfix.interfaces.IGuiScreenFix;
 import lain.mods.inputfix.utils.OSDetector;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 
-public class InputFixSetup implements IFMLCallHook
+public class InputFixSetup
 {
 
     public static IGuiScreenFix impl;
 
-    @Override
-    public Void call() throws Exception
+    public static void setup()
     {
         OSDetector.OS OS = OSDetector.detectOS();
         switch (OS)
@@ -36,12 +35,6 @@ public class InputFixSetup implements IFMLCallHook
             default:
                 break;
         }
-        return null;
-    }
-
-    @Override
-    public void injectData(Map<String, Object> arg0)
-    {
     }
 
 }

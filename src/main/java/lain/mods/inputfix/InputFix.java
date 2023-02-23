@@ -4,8 +4,7 @@ import java.util.Map;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name("InputFix")
-@IFMLLoadingPlugin.MCVersion("")
-@IFMLLoadingPlugin.TransformerExclusions("lain.mods.inputfix.")
+@IFMLLoadingPlugin.MCVersion("1.7.10")
 public class InputFix implements IFMLLoadingPlugin
 {
 
@@ -30,7 +29,7 @@ public class InputFix implements IFMLLoadingPlugin
     @Override
     public String getSetupClass()
     {
-        return "lain.mods.inputfix.InputFixSetup";
+        return null;
     }
 
     @Override
