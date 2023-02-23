@@ -1,0 +1,13 @@
+{
+  "ideaDirPath": "C:/Users/zlain/Documents/GitHub/InputFix/.idea",
+  "modulesMap": {
+    "InputFix": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.iml",
+    "InputFix:mcLauncher": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.mcLauncher.iml",
+    "InputFix:patchedMc": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.patchedMc.iml",
+    "InputFix:test": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.test.iml",
+    "InputFix:injectedTags": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.injectedTags.iml",
+    "InputFix:main": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.main.iml",
+    "InputFix:api": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.api.iml",
+    "InputFix:ideVirtualMain": "C:/Users/zlain/Documents/GitHub/InputFix/.idea/modules/InputFix.ideVirtualMain.iml"
+  }
+}
